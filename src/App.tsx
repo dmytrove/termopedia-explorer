@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import TermPage from "./pages/TermPage";
+import AboutPage from "./pages/AboutPage";
+import SourcesPage from "./pages/SourcesPage";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 
@@ -28,6 +30,8 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/term/:id" element={<TermPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/sources" element={<SourcesPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

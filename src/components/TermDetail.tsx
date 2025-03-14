@@ -49,7 +49,7 @@ const TermDetail: React.FC<TermDetailProps> = ({ term }) => {
                 Пов'язані терміни: {term.refIds.length}
               </span>
               
-              <Link to="#" className="inline-flex items-center text-sm text-primary hover:underline">
+              <Link to="/sources" className="inline-flex items-center text-sm text-primary hover:underline">
                 <span className="mr-1">Переглянути додаткову інформацію</span>
                 <ExternalLink size={14} />
               </Link>
