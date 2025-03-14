@@ -3,14 +3,15 @@ import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import SearchBar from '@/components/SearchBar';
 import TermCard from '@/components/TermCard';
-import { parseCSVData, searchTerms } from '@/utils/dataUtils';
-import { Term } from '@/types';
+import { parseCSVData, searchTerms, getRelatedTermNames } from '@/utils/dataUtils';
+import { Term, TermsData } from '@/types';
 import { FadeIn, SlideUp } from '@/components/ui/motion';
 
 const Index = () => {
   const [data, setData] = useState<Term[]>([]);
   const [filteredData, setFilteredData] = useState<Term[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [termsData, setTermsData] = useState<TermsData>({ terms: [], allTerms: {} });
 
   useEffect(() => {
     // Simulate loading from CSV
@@ -18,6 +19,7 @@ const Index = () => {
       const parsedData = parseCSVData();
       setData(parsedData.terms);
       setFilteredData(parsedData.terms);
+      setTermsData(parsedData);
       setIsLoading(false);
     }, 800);
 
@@ -59,7 +61,12 @@ const Index = () => {
           <SlideUp delay={300}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
               {filteredData.map((term, index) => (
-                <TermCard key={term.id} term={term} index={index} />
+                <TermCard 
+                  key={term.id} 
+                  term={term} 
+                  index={index} 
+                  relatedTermNames={getRelatedTermNames(term, termsData.allTerms)}
+                />
               ))}
             </div>
           </SlideUp>

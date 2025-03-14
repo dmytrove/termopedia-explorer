@@ -1,17 +1,20 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Term } from '@/types';
 import { SlideUp } from '@/components/ui/motion';
+import { Link2 } from 'lucide-react';
 
 interface TermCardProps {
   term: Term;
   index: number;
   className?: string;
+  relatedTermNames?: string[];
 }
 
-const TermCard: React.FC<TermCardProps> = ({ term, index, className }) => {
+const TermCard: React.FC<TermCardProps> = ({ term, index, className, relatedTermNames = [] }) => {
   return (
     <SlideUp delay={100 + index * 50} duration={400}>
       <Link 
@@ -27,10 +30,6 @@ const TermCard: React.FC<TermCardProps> = ({ term, index, className }) => {
         <div className="p-6">
           <div className="flex flex-col space-y-4">
             <div className="space-y-2">
-              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                ID: {term.id}
-              </div>
-              
               <h3 className="text-xl font-medium leading-tight">
                 {term.termUA}
               </h3>
@@ -44,9 +43,21 @@ const TermCard: React.FC<TermCardProps> = ({ term, index, className }) => {
               {term.definition}
             </p>
             
-            <div className="pt-2 flex items-center text-xs text-muted-foreground">
-              <span>Пов'язані терміни: {term.refIds.length}</span>
-            </div>
+            {relatedTermNames.length > 0 && (
+              <div className="pt-2 flex flex-wrap gap-2">
+                {relatedTermNames.slice(0, 3).map((name, i) => (
+                  <Badge key={i} variant="outline" className="flex items-center gap-1 text-xs">
+                    <Link2 className="w-3 h-3" />
+                    {name}
+                  </Badge>
+                ))}
+                {relatedTermNames.length > 3 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{relatedTermNames.length - 3}
+                  </Badge>
+                )}
+              </div>
+            )}
           </div>
         </div>
         

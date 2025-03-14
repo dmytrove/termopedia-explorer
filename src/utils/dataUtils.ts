@@ -1,4 +1,3 @@
-
 import { Term, TermsData } from '@/types';
 import csvData from '../../ai_terms.csv?raw';
 
@@ -68,4 +67,11 @@ export const getRelatedTerms = (termId: string, allTerms: Record<string, Term>):
   return term.refIds
     .map(id => allTerms[id])
     .filter(Boolean);
+};
+
+// New helper function to get related term names for display in pills
+export const getRelatedTermNames = (term: Term, allTerms: Record<string, Term>): string[] => {
+  return term.refIds
+    .map(id => allTerms[id]?.termUA)
+    .filter(Boolean) as string[];
 };
