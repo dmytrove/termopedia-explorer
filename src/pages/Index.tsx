@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import SearchBar from '@/components/SearchBar';
 import TermCard from '@/components/TermCard';
+import TermsTable from '@/components/TermsTable';
+import ViewToggle, { ViewMode } from '@/components/ViewToggle';
 import { parseCSVData, searchTerms, getRelatedTermNames } from '@/utils/dataUtils';
 import { Term, TermsData } from '@/types';
 import { FadeIn, SlideUp } from '@/components/ui/motion';
@@ -12,6 +14,8 @@ const Index = () => {
   const [filteredData, setFilteredData] = useState<Term[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [termsData, setTermsData] = useState<TermsData>({ terms: [], allTerms: {} });
+  const [viewMode, setViewMode] = useState<ViewMode>('card');
+  const [relatedTermsMap, setRelatedTermsMap] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     // Simulate loading from CSV
@@ -20,6 +24,14 @@ const Index = () => {
       setData(parsedData.terms);
       setFilteredData(parsedData.terms);
       setTermsData(parsedData);
+      
+      // Create a map of related terms names for each term
+      const map: Record<string, string[]> = {};
+      parsedData.terms.forEach(term => {
+        map[term.id] = getRelatedTermNames(term, parsedData.allTerms);
+      });
+      setRelatedTermsMap(map);
+      
       setIsLoading(false);
     }, 800);
 
@@ -43,8 +55,15 @@ const Index = () => {
             Досліджуйте базу знань термінології українською та англійською мовами
           </p>
           
-          <div className="max-w-2xl mx-auto">
-            <SearchBar onSearch={handleSearch} />
+          <div className="flex flex-col sm:flex-row items-center gap-4 justify-center max-w-2xl mx-auto">
+            <div className="flex-1 w-full">
+              <SearchBar onSearch={handleSearch} />
+            </div>
+            <ViewToggle 
+              activeView={viewMode} 
+              onChange={setViewMode} 
+              className="self-end sm:self-auto"
+            />
           </div>
         </FadeIn>
 
@@ -58,18 +77,24 @@ const Index = () => {
             ))}
           </div>
         ) : filteredData.length > 0 ? (
-          <SlideUp delay={300}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-              {filteredData.map((term, index) => (
-                <TermCard 
-                  key={term.id} 
-                  term={term} 
-                  index={index} 
-                  relatedTermNames={getRelatedTermNames(term, termsData.allTerms)}
-                />
-              ))}
-            </div>
-          </SlideUp>
+          <div className="mt-12">
+            {viewMode === 'card' ? (
+              <SlideUp delay={300}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredData.map((term, index) => (
+                    <TermCard 
+                      key={term.id} 
+                      term={term} 
+                      index={index} 
+                      relatedTermNames={relatedTermsMap[term.id] || []}
+                    />
+                  ))}
+                </div>
+              </SlideUp>
+            ) : (
+              <TermsTable terms={filteredData} relatedTermsMap={relatedTermsMap} />
+            )}
+          </div>
         ) : (
           <FadeIn className="text-center py-20">
             <p className="text-lg text-muted-foreground">
