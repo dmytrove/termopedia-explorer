@@ -62,7 +62,23 @@ This project is built with .
 
 ## How can I deploy this project?
 
+### Option 1: Using Lovable
 Simply open [Lovable](https://lovable.dev/projects/c139d702-de02-40be-8ced-81d6a16c3871) and click on Share -> Publish.
+
+### Option 2: Using GitHub Pages
+This project is configured to be deployed to GitHub Pages. You can deploy it in two ways:
+
+1. **Automatic deployment with GitHub Actions**:
+   - Push your changes to the main branch
+   - GitHub Actions will automatically build and deploy your site
+   - Your site will be available at `https://yourusername.github.io/termopedia-explorer/`
+
+2. **Manual deployment**:
+   - Install the gh-pages package if not already installed: `npm install --save-dev gh-pages`
+   - Run: `npm run deploy`
+   - Your site will be deployed to the gh-pages branch and available at `https://yourusername.github.io/termopedia-explorer/`
+
+**Important**: Before deploying, make sure to update the `homepage` field in `package.json` with your actual GitHub username.
 
 ## I want to use a custom domain - is that possible?
 
